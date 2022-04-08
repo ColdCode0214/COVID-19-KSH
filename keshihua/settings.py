@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'demo',
     'rest_framework',
     'django_crontab',
-    'djcelery'
+    'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -87,9 +87,9 @@ WSGI_APPLICATION = 'keshihua.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ksh',
+        'NAME': 'cs542',
         'USER': 'root',
-        'PASSWORD': '147123',
+        'PASSWORD': '123456',
         'PORT': '3306',
         'POST': '127.0.0.1'
     }
@@ -145,6 +145,8 @@ STATICFILES_DIRS = [
 
 
 # celery
+# import djcelery
+# djcelery.setup_loader() # 重载
 import djcelery
 djcelery.setup_loader() # 重载
 
