@@ -7,13 +7,15 @@ from bs4 import BeautifulSoup
 from sqlalchemy import create_engine
 
 
+
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36'
 }
-con = create_engine("mysql+mysqlconnector://root:147123@localhost:3306/ksh")
+#con = create_engine("mysql+mysqlconnector://root:147123@localhost:3306/ksh")
+con = create_engine("mysql+mysqlconnector://root:123456@localhost:3306/cs573")
 # 历史数据
 def lishishuju():
-    df = pd.read_csv('demo/csv/丁香园国内疫情.csv', engine='c') # 读取数据
+    df = pd.read_csv('C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/csv/丁香园国内疫情.csv', engine='c') # 读取数据
 
     df = df.sort_values('累计确诊', ascending=False) # 根据累计确诊去排序-降序
 
@@ -43,7 +45,7 @@ def lishishuju():
     df['dateId'] = x + y
     df['dateId'] = pd.DatetimeIndex(df['dateId']).astype('str').str[:7]
 
-    df.to_csv('demo/csv/国内疫情数据.csv', index=False, encoding='utf-8-sig')
+    df.to_csv('C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/csv/国内疫情数据.csv', index=False, encoding='utf-8-sig')
     df.to_sql('gnlssj', if_exists='replace', con=con, index=False)
     con.execute('ALTER TABLE gnlssj ADD id INT(16) NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST;')  # 添加自增字段id
 
@@ -63,10 +65,10 @@ def yqday():
     df = pd.DataFrame(y, columns=x)
     df.to_sql('bentuxianyou31', if_exists='replace', con=con, index=False)
     con.execute('ALTER TABLE bentuxianyou31 ADD id INT(16) NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST;') # 添加自增字段id
-    with open('demo/data/中国疫情.json', 'w', encoding='utf-8') as f:
+    with open('C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/data/中国疫情.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(data, ensure_ascii=False, indent=4))
 
-    pd.DataFrame(y).to_csv('demo/csv/近31省市区现有本土病例.csv', index=False, encoding='utf-8', header=x)
+    pd.DataFrame(y).to_csv('C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/csv/近31省市区现有本土病例.csv', index=False, encoding='utf-8', header=x)
     # 使用create_engine + pandas 快捷保存数据库
 
 
@@ -76,19 +78,19 @@ def yqveryday():
     head_data = requests.get(url=url, headers=headers).content  # 获取数据
     data = json.loads(head_data)['data'] # 把取到的数据返回
     # 使用pandas快捷保存csv
-    pd.DataFrame(data).to_csv('demo/csv/丁香园国内每日疫情情况.csv', encoding='utf-8', index=False)
+    pd.DataFrame(data).to_csv('C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/csv/丁香园国内每日疫情情况.csv', encoding='utf-8', index=False)
     pd.DataFrame(data).to_sql('mrsj', if_exists='replace', con=con, index=False)
     con.execute('ALTER TABLE mrsj ADD id INT(16) NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST;') # 添加自增字段id
 
 # 实时热点
-def ssrd():
-    url = 'https://opendata.baidu.com/data/inner?tn=reserved_all_res_tn&dspName=iphone&from_sf=1&dsp=iphone&resource_id=28565&alr=1&query=%E5%9B%BD%E5%86%85%E6%96%B0%E5%9E%8B%E8%82%BA%E7%82%8E%E6%9C%80%E6%96%B0%E5%8A%A8%E6%80%81&cb=jsonp_1642854207390_27502'
-    data = json.loads(requests.get(url=url, headers=headers).content.decode().split('(')[1][:-1])['Result'][0]['DisplayData']['result'][
-        'items']
-    with open('demo/data/实时热点.json', 'w', encoding='utf-8') as f:
-        f.write(json.dumps(data, ensure_ascii=False, indent=4))
-    pd.DataFrame(data).to_sql('ssrd', if_exists='replace', con=con, index=False)
-    con.execute('ALTER TABLE ssrd ADD id INT(16) NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST;') # 添加自增字段id
+# def ssrd():
+#     url = 'https://opendata.baidu.com/data/inner?tn=reserved_all_res_tn&dspName=iphone&from_sf=1&dsp=iphone&resource_id=28565&alr=1&query=%E5%9B%BD%E5%86%85%E6%96%B0%E5%9E%8B%E8%82%BA%E7%82%8E%E6%9C%80%E6%96%B0%E5%8A%A8%E6%80%81&cb=jsonp_1642854207390_27502'
+#     data = json.loads(requests.get(url=url, headers=headers).content.decode().split('(')[1][:-1])['Result'][0]['DisplayData']['result'][
+#         'items']
+#     with open('C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/data/实时热点.json', 'w', encoding='utf-8') as f:
+#         f.write(json.dumps(data, ensure_ascii=False, indent=4))
+#     pd.DataFrame(data).to_sql('ssrd', if_exists='replace', con=con, index=False)
+#     con.execute('ALTER TABLE ssrd ADD id INT(16) NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST;') # 添加自增字段id
 
 # 国内各省目前疫情
 def parse():
@@ -131,7 +133,7 @@ def parse():
                 '累计治愈': curedCount[i],
                 '累计死亡': deadCount[i],
             })
-    pd.DataFrame(data1).to_csv('demo/csv/丁香园国内疫情.csv', encoding='utf-8', index=False)
+    pd.DataFrame(data1).to_csv('C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/csv/丁香园国内疫情.csv', encoding='utf-8', index=False)
     pd.DataFrame(data).to_sql('xyyq', if_exists='replace', con=con, index=False)
     con.execute('ALTER TABLE xyyq ADD id INT(16) NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST;') # 添加自增字段id
 
@@ -187,9 +189,9 @@ def fxdq():
                             'name': kk
                         })
 
-        with open(f'demo/data/{fxlevel[tt]}.json', 'w', encoding='utf-8') as f:
+        with open(f'C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/data/{fxlevel[tt]}.json', 'w', encoding='utf-8') as f:
             f.write(json.dumps(q, ensure_ascii=False, indent=4))
-    with open(f'demo/data/风险地区.json', 'w', encoding='utf-8') as f:
+    with open(f'C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/data/风险地区.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(data, ensure_ascii=False, indent=4))
 
 # 近2个月中国疫情情况
@@ -214,27 +216,27 @@ def Moon_Tow_Near():
         i['dateId'] = x + y
         i['dateId'] = pd.DatetimeIndex(i['dateId']).astype('str')
 
-    pd.DataFrame(df).to_csv('demo/csv/近2个月新增情况.csv', encoding='utf-8', index=False)
-    pd.DataFrame(df1).to_csv('demo/csv/近2个月累计情况.csv', encoding='utf-8', index=False)
+    pd.DataFrame(df).to_csv('C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/csv/近2个月新增情况.csv', encoding='utf-8', index=False)
+    pd.DataFrame(df1).to_csv('C:/Users/Lenovo/Desktop/573/Group Project/COVID-19-KSH/demo/csv/近2个月累计情况.csv', encoding='utf-8', index=False)
     pd.DataFrame(df).to_sql('j2yxz', if_exists='replace', con=con, index=False)
     con.execute('ALTER TABLE j2yxz ADD id INT(16) NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST;') # 添加自增字段id
     pd.DataFrame(df1).to_sql('j2ylj', if_exists='replace', con=con, index=False)
     con.execute('ALTER TABLE j2ylj ADD id INT(16) NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST;') # 添加自增字段id
 
 if __name__ == '__main__':
-    pass
-    # print('正在获取历史数据...')
-    # lishishuju()  # 历史数据
-    # print('正在获取中国今日疫情情况...')
-    # yqday()  # 中国今日疫情情况
-    # print('正在获取中国每日疫情...')
-    # yqveryday()  # 中国每日疫情
-    # print('正在获取实时热点...')
-    # ssrd()  # 实时热点
-    # print('正在获取国内各省目前疫情...')
-    # parse()  # 国内各省目前疫情
-    # print('正在获取国内风险地区...')
-    # fxdq()  # 国内风险地区
-    # print('正在获取进两月份的疫情趋势...')
-    # Moon_Tow_Near()
-    # print('获取完毕数据已更新!')
+    #pass
+    print('正在获取历史数据...')
+    lishishuju()  # 历史数据
+    print('正在获取中国今日疫情情况...')
+    yqday()  # 中国今日疫情情况
+    print('正在获取中国每日疫情...')
+    yqveryday()  # 中国每日疫情
+    print('正在获取实时热点...')
+    #ssrd()  # 实时热点
+    print('正在获取国内各省目前疫情...')
+    parse()  # 国内各省目前疫情
+    print('正在获取国内风险地区...')
+    fxdq()  # 国内风险地区
+    print('正在获取进两月份的疫情趋势...')
+    Moon_Tow_Near()
+    print('获取完毕数据已更新!')

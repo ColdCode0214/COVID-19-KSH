@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'keshihua.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cs542',
+        'NAME': 'cs573',
         'USER': 'root',
         'PASSWORD': '123456',
         'PORT': '3306',
